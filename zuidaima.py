@@ -3,6 +3,8 @@ import re
 import http.cookiejar
 import urllib.request
 import urllib.parse
+import webbrowser
+import requests
  
 def ungzip(data):
     try:        # 尝试解压
@@ -30,8 +32,9 @@ def getOpener(head):
     opener.addheaders = header
     return opener
 
+save_path = 'D:\\workspace\\zuidaima.html'
 def saveFile(data):
-    save_path = 'D:\\workspace\\zuidaima.xml'
+    
     f_obj = open(save_path, 'w', encoding='UTF-8') # wb 表示打开方式
     f_obj.write(data)
     f_obj.close()
@@ -64,8 +67,22 @@ op = opener.open(url, postData)
 data = op.read()
 data = ungzip(data)
 
-
+postSth = {
+    'Content-Disposition': 'form-data',
+    'name="r"': 'u4SpMlGJhG',
+    'name="content"': '天气变凉了' 
+    
+}
+#postData = urllib.parse.urlencode(postSth).encode()
+url = url_base + 'mood/create.htm'
+#po = opener.open(url, postData)
 
 data=data.decode('UTF-8', 'ignore')
 saveFile(data)
+#webbrowser.open(save_path)
+
+#payload = {'content':'天气变凉了'}  
+r = requests.post(url, postSth)  
+with open(save_path, "w") as f:  
+    f.write(r.content.decode())  
 print('完成')
